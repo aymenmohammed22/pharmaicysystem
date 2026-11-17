@@ -1,0 +1,7 @@
+import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+  platform: process.platform,
+  showNotification: (title: string, body: string) => ipcRenderer.invoke('show-notification', { title, body }),
+});

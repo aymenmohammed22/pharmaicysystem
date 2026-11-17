@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #F3F6FA;
+    color: #1E293B;
+    font-family: "Tajawal", "Cairo", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: #0B4F9C;
+    color: #ffffff;
+  }
+
+  table th,
+  table td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #0B4F9C;
+    outline-offset: 1px;
+  }
+}
+
+/* Subtle scrollbar polish */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #EBF0F6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B9C8DA;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0B4F9C;
+}
+
+@media print {
+  @page {
+    size: auto;
+    margin: 12mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  /* When PrintPreviewModal is active (rendered as portal on body outside #root),
+     hide the main app shell without hiding the portaled print preview overlay. */
+  body.print-modal-active #root,
+  body.print-modal-active #app-shell {
+    display: none !important;
+  }
+
+  body.print-modal-active #print-preview-overlay {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.print-modal-active #print-preview-scroll {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body.print-modal-active #print-preview-root {
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-top: 4px solid #F97316 !important;
+    border-radius: 0 !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  body.print-modal-active #print-preview-root[data-paper-mode='receipt'],
+  body.print-modal-active #print-preview-root[data-paper-mode='receipt80'] {
+    max-width: 80mm !important;
+    width: 80mm !important;
+  }
+
+  body.print-modal-active #print-preview-root[data-paper-mode='receipt58'] {
+    max-width: 58mm !important;
+    width: 58mm !important;
+  }
+
+  body.print-modal-active #print-preview-root[data-paper-mode='label'] {
+    max-width: 100% !important;
+    width: 100% !important;
+    border-top: none !important;
+  }
+
+  /* Direct window.print() fallback when PrintPreviewModal is not open */
+  body:not(.print-modal-active) #app-shell,
+  body:not(.print-modal-active) #app-shell > div,
+  body:not(.print-modal-active) #app-shell main {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

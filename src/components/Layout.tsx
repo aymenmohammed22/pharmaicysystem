@@ -31,6 +31,7 @@ import {
 import type { BillItem, PageKey, PermissionKey, SiteSettings, User } from '../types';
 import { ROLE_LABELS, SYSTEM_LOGO_SRC, hasPermission, resolvePhotoSrc } from '../types';
 import { ConfirmModal } from './ConfirmModal';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface LayoutProps {
   user: User;
@@ -211,6 +212,7 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          <PWAInstallButton />
           {hasPermission(user, 'manageSiteSettings') ? (
             <button
               type="button"

@@ -32,6 +32,7 @@ import type { BillItem, PageKey, PermissionKey, SiteSettings, User } from '../ty
 import { ROLE_LABELS, SYSTEM_LOGO_SRC, hasPermission, resolvePhotoSrc } from '../types';
 import { ConfirmModal } from './ConfirmModal';
 import { PWAInstallButton } from './PWAInstallButton';
+import { Keyboard } from 'lucide-react';
 
 interface LayoutProps {
   user: User;
@@ -41,6 +42,7 @@ interface LayoutProps {
   onNavigate: (page: PageKey) => void;
   onClearBill: () => Promise<void>;
   onLogout: () => void;
+  onOpenShortcuts?: () => void;
   children: React.ReactNode;
 }
 
@@ -124,6 +126,7 @@ export const Layout: React.FC<LayoutProps> = ({
   onNavigate,
   onClearBill,
   onLogout,
+  onOpenShortcuts,
   children,
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -213,6 +216,17 @@ export const Layout: React.FC<LayoutProps> = ({
 
         <div className="flex items-center gap-3">
           <PWAInstallButton />
+          {onOpenShortcuts && (
+            <button
+              type="button"
+              onClick={onOpenShortcuts}
+              title="اختصارات لوحة المفاتيح (Alt+H أو Shift+?)"
+              className="hidden items-center gap-1.5 rounded-lg border border-white/25 bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/20 sm:inline-flex"
+            >
+              <Keyboard className="h-4 w-4 text-sky-200" />
+              <span>الاختصارات</span>
+            </button>
+          )}
           {hasPermission(user, 'manageSiteSettings') ? (
             <button
               type="button"

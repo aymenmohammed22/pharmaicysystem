@@ -22,6 +22,8 @@ import { hasPermission } from './types';
 import { LoginView } from './components/LoginView';
 import { Layout } from './components/Layout';
 import { ErrorPopupModal } from './components/ErrorPopupModal';
+import { KeyboardShortcutsModal } from './components/KeyboardShortcutsModal';
+import { useKeyboardShortcuts } from './utils/useKeyboardShortcuts';
 import { showErrorPopup } from './lib/errorPopup';
 import { DashboardCategories } from './pages/DashboardCategories';
 import { InventoriesPage } from './pages/InventoriesPage';
@@ -75,6 +77,17 @@ export default function App() {
   );
   const [selectedCatId, setSelectedCatId] = useState<number | null>(null);
   const [initialPrescriptionId, setInitialPrescriptionId] = useState<number | null>(null);
+  const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
+
+  useKeyboardShortcuts({
+    onNavigate: (page) => {
+      if (page === 'inventories') setSelectedCatId(null);
+      if (page === 'reports') setReportsTab('sales');
+      setActivePage(page);
+    },
+    onToggleHelp: () => setShortcutsModalOpen((v) => !v),
+    isSuspended: !user,
+  });
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [inventories, setInventories] = useState<InventoryItem[]>([]);
@@ -355,7 +368,9 @@ export default function App() {
         }}
         onClearBill={handleClearBill}
         onLogout={handleLogout}
+        onOpenShortcuts={() => setShortcutsModalOpen(true)}
       >
+      <KeyboardShortcutsModal isOpen={shortcutsModalOpen} onClose={() => setShortcutsModalOpen(false)} />
       {activePage === 'dashboard' && hasPermission(user, 'viewDashboard') && (
         <DashboardCategories
           user={user}

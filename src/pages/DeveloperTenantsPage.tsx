@@ -629,7 +629,7 @@ export const DeveloperTenantsPage: React.FC<DeveloperTenantsPageProps> = ({
       (t.phone && t.phone.includes(searchTerm));
 
     if (!matchesSearch) return false;
-    if (statusFilter === 'active') return t.isActive && !t.licenseExpired;
+    if (statusFilter === 'active') return t.isActive;
     if (statusFilter === 'suspended') return !t.isActive;
     if (statusFilter === 'expiring') return Boolean(t.licenseExpiringSoon || t.licenseExpired);
     return true;
@@ -1580,6 +1580,7 @@ export const DeveloperTenantsPage: React.FC<DeveloperTenantsPageProps> = ({
                         setLicenseManuallyEdited(true);
                       }}
                       className="mt-1 w-full rounded-lg border border-slate-300 bg-white p-2 text-xs"
+                      placeholder="اتركه فارغاً لترخيص دائم"
                     />
                   </div>
                   <div className="flex items-end pb-1">
@@ -1594,8 +1595,32 @@ export const DeveloperTenantsPage: React.FC<DeveloperTenantsPageProps> = ({
                     </label>
                   </div>
                 </div>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLicenseExpiresAt('');
+                      setLicenseManuallyEdited(true);
+                    }}
+                    className="rounded border border-emerald-300 bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-800 hover:bg-emerald-100 transition"
+                  >
+                    ✓ ترخيص دائم مفتوح (بدون تاريخ انتهاء)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLicenseExpiresAt(addMonthsDate(subscriptionStart, 12));
+                      setLicenseManuallyEdited(false);
+                    }}
+                    className="rounded border border-slate-300 bg-white px-2 py-0.5 font-semibold text-slate-700 hover:bg-slate-100 transition"
+                  >
+                    ترخيص سنة (12 شهر)
+                  </button>
+                </div>
                 <p className="mt-1.5 text-[11px] text-slate-500">
-                  يظهر تنبيه تلقائي لمالك الصيدلية قبل انتهاء تاريخ الترخيص بـ 5 أيام، ويتوقف الدخول تلقائياً بعد انتهائه.
+                  {licenseExpiresAt
+                    ? `ينتهي الترخيص في ${licenseExpiresAt}. يظهر تنبيه لمالك الصيدلية قبل الانتهاء بـ 5 أيام.`
+                    : 'الترخيص دائم ومفتوح للصيدلية بدون أي توقف أو انتهاء صلاحية.'}
                 </p>
 
                 <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">

@@ -1,15 +1,14 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig, type PluginOption } from 'vite';
 
-export default defineConfig(() => {
-  return {
-    plugins: [
-      react(),
-      tailwindcss(),
-      VitePWA({
+export default defineConfig(async () => {
+  let pwaPlugin: PluginOption | null = null;
+  try {
+    const pwaModule = await import('vite-plugin-pwa');
+    if (pwaModule && pwaModule.VitePWA) {
+      pwaPlugin = pwaModule.VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
         manifest: {
@@ -57,7 +56,17 @@ export default defineConfig(() => {
           enabled: true,
           type: 'module',
         },
-      }),
+      });
+    }
+  } catch {
+    // If vite-plugin-pwa is not available or when building electron, build continues cleanly
+  }
+
+  return {
+    plugins: [
+      react(),
+      tailwindcss(),
+      ...(pwaPlugin ? [pwaPlugin] : []),
     ],
     resolve: {
       alias: {
@@ -73,4 +82,5 @@ export default defineConfig(() => {
     },
   };
 });
+
 

@@ -27,10 +27,25 @@ export {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DATA_DIR = path.join(__dirname, 'data');
-const SQLITE_FILE = path.join(DATA_DIR, 'store.sqlite');
+export const DATA_DIR = process.env.OMNI_USER_DATA_DIR
+  ? path.join(process.env.OMNI_USER_DATA_DIR, 'data')
+  : path.join(__dirname, 'data');
+export const SQLITE_FILE = path.join(DATA_DIR, 'store.sqlite');
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
+
+// If using external persistent directory (like Electron AppData) and database does not exist yet,
+// automatically clone the initial baseline sqlite database if present
+if (process.env.OMNI_USER_DATA_DIR && !fs.existsSync(SQLITE_FILE)) {
+  const localDefaultSqlite = path.join(__dirname, 'data', 'store.sqlite');
+  if (fs.existsSync(localDefaultSqlite)) {
+    try {
+      fs.copyFileSync(localDefaultSqlite, SQLITE_FILE);
+    } catch {
+      // Fallback: new database will be auto-migrated and initialized
+    }
+  }
+}
 
 export const sqlite = new DatabaseSync(SQLITE_FILE);
 sqlite.exec('PRAGMA journal_mode = WAL;');
